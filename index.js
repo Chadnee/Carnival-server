@@ -9,6 +9,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json())
 
+app.get('/', (req, res)=>{
+    res.send('Carnival provides treatment')
+});
 
 const uri = `mongodb+srv://${process.env.USER_DB}:${process.env.PASS_DB}@cluster0.jxd6utg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -26,7 +29,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const serviceCollection = client.db("ServiceDB").collection("serviceCollection")
+    const serviceCollection = client.db("CarnivalDB").collection("serviceCollection")
     
     app.get('/services', async(req, res) =>{
         const result = await serviceCollection.find().toArray()
@@ -35,19 +38,17 @@ async function run() {
    
    
     // Send a ping to confirm a successful connection
-    //await client.db("admin").command({ ping: 1 });
+    await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    //await client.close();
   }
 }
 run().catch(console.dir);
 
 
-app.get('/', (req, res)=>{
-    res.send('Carnival provides treatment')
-});
+
 
 app.listen(port, () => {
     console.log(`Carnival is running on port ${port}`)
